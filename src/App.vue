@@ -1,0 +1,97 @@
+<template>
+   <div class="relative flex flex-col items-center bg-white dark:bg-black transition-bg">
+      <div class="absolute inset-0 overflow-hidden">
+         <div class="jumbo absolute -inset-[10px] opacity-50"></div>
+      </div>
+      <RouterView></RouterView>
+   </div>
+</template>
+
+
+<style>
+@import url("./assets/css/index.css");
+
+@font-face {
+   font-family: 'dyFont';
+   src: url('./assets/fonts/DouyinSansBold.otf') format('opentype');
+}
+
+body {
+   margin: 0;
+   font-family: 'dyFont', sans-serif;
+   /* background-color: mintcream; */
+}
+
+@-webkit-keyframes jumbo {
+   from {
+      background-position: 50% 50%, 50% 50%;
+   }
+
+   to {
+      background-position: 350% 50%, 350% 50%;
+   }
+}
+
+@keyframes jumbo {
+   from {
+      background-position: 50% 50%, 50% 50%;
+   }
+
+   to {
+      background-position: 350% 50%, 350% 50%;
+   }
+}
+
+.jumbo {
+   --stripes: repeating-linear-gradient(100deg,
+         #fff 0%,
+         #fff 7%,
+         transparent 10%,
+         transparent 12%,
+         #fff 16%);
+   --stripesDark: repeating-linear-gradient(100deg,
+         #000 0%,
+         #000 7%,
+         transparent 10%,
+         transparent 12%,
+         #000 16%);
+   --rainbow: repeating-linear-gradient(100deg,
+         #60a5fa 10%,
+         #e879f9 15%,
+         #60a5fa 20%,
+         #5eead4 25%,
+         #60a5fa 30%);
+   background-image: var(--stripes), var(--rainbow);
+   background-size: 300%, 200%;
+   background-position: 50% 50%, 50% 50%;
+
+   filter: blur(10px) invert(100%);
+
+   -webkit-mask-image: radial-gradient(ellipse at 100% 0%, black 40%, transparent 70%);
+
+   mask-image: radial-gradient(ellipse at 100% 0%, black 40%, transparent 70%);
+
+   pointer-events: none;
+}
+
+.jumbo::after {
+   content: "";
+   position: absolute;
+   inset: 0;
+   background-image: var(--stripes), var(--rainbow);
+   background-size: 200%, 100%;
+   -webkit-animation: jumbo 60s linear infinite;
+   animation: jumbo 60s linear infinite;
+   background-attachment: fixed;
+   mix-blend-mode: difference;
+}
+
+.dark .jumbo {
+   background-image: var(--stripesDark), var(--rainbow);
+   filter: blur(10px) opacity(50%) saturate(200%);
+}
+
+.dark .jumbo::after {
+   background-image: var(--stripesDark), var(--rainbow);
+}
+</style>
