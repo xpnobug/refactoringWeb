@@ -49,7 +49,7 @@ jobs:
             # 上传打包资源
             - name: 上传打包资源
               run: |
-                sshpass -p ${{ secrets.DEPLOY_PASSWORD }} scp -o StrictHostKeyChecking=no -r ./dist/* root@182.92.201.19:/www/wwwroot/lygh/
+                sshpass -p ${{ secrets.DEPLOY_PASSWORD }} scp -o StrictHostKeyChecking=no -r ./dist/* root@182.92.201.19:/www/wwwroot/kdgfile/
               env:
                 REMOTE_PASSWORD: ${{ secrets.DEPLOY_PASSWORD }}
               # uses: appleboy/ssh-action@v0.1.10

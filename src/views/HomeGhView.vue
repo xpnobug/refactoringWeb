@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="zIndex">
         <div style="margin-bottom: 15px">
             <el-radio v-model="direction" label="horizontal">horizontal</el-radio>
             <el-radio v-model="direction" label="vertical">vertical</el-radio>
@@ -69,4 +69,9 @@ const handleToGh = (dayId) => {
     router.push({ name: 'timeLine', params: { id: dayId } });
 };
 </script>
-  
+
+<style scoped>
+.zIndex{
+  z-index: 1;
+}
+</style>

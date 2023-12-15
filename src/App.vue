@@ -1,9 +1,9 @@
 <template>
    <div class="relative flex flex-col items-center bg-white dark:bg-black transition-bg">
+     <RouterView></RouterView>
       <div class="absolute inset-0 overflow-hidden">
          <div class="jumbo absolute -inset-[10px] opacity-50"></div>
       </div>
-      <RouterView></RouterView>
    </div>
 </template>
 
@@ -94,4 +94,5 @@ body {
 .dark .jumbo::after {
    background-image: var(--stripesDark), var(--rainbow);
 }
+
 </style>
