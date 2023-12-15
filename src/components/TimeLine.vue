@@ -132,20 +132,26 @@ function getFileId(id) {
 
 
 const toggleTheme = () => {
+  var elements = document.getElementsByClassName('inset-0');
   if (document.body.classList.contains("dark")) {
     document.body.classList.remove("dark");
-    document.getElementsByClassName('inset-0');
     // 遍历获取到的元素并为其添加样式
     for (var i = 0; i < elements.length; i++) {
       var element = elements[i];
-
       // 添加样式
-      element.style.inset = '0px';
+      element.style.inset = '';
       // 在这里可以继续添加其他样式
     }
   }
   else {
     document.body.classList.add("dark");
+    // 遍历获取到的元素并为其添加样式
+    for (var i = 0; i < elements.length; i++) {
+      var element = elements[i];
+      // 添加样式
+      element.style.inset = '0px';
+      // 在这里可以继续添加其他样式
+    }
   }
 }
 // 弹出层
