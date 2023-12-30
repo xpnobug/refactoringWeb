@@ -66,7 +66,7 @@
                         {{ soltData.card.position }}
                       </div>
                       <div>
-                        <CaoZuo></CaoZuo>
+                        <CaoZuo :ghid="soltData.card.detailId" ></CaoZuo>
                       </div>
                     </div>
                   </template>
@@ -303,6 +303,7 @@ const handleClick = (tab, event) => {
 
 //1.交通 2.餐饮 3.酒店 4.景点 5.自定义
 const getComponentType = (cards) => {
+  console.log(cards)
   // if (cards.creatType == '1') {
   //     return card;
   // } else if (cards.creatType == '2') {

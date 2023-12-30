@@ -32,11 +32,34 @@ const selectAll = async (type) => {
       throw error;
     }
   };
- 
-  //添加
+
+
+  //查单个规划
+const ghTripDetail = async (id) => {
+  try {
+    const response = await instance.get('/ghTripDetails/detail', {
+      params: { id }
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+//添加
 const addDetailsInfo = async (ghTripDetails) => {
   try {
     const response = await instance.post('/ghTripDetails/addDetailsInfo', ghTripDetails);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+//修改
+const updDetailsInfo = async (ghTripDetails) => {
+  try {
+    const response = await instance.post('/ghTripDetails/updDetailsInfo', ghTripDetails);
     return response.data;
   } catch (error) {
     throw error;
@@ -51,6 +74,15 @@ const uploadFile = async (ghTripDetails) => {
     throw error;
   }
 };
+const delDetailsInfo = async (infoId) => {
+  try {
+    const response = await instance.get('/ghTripDetails/delDetailsInfo', {
+      params: { infoId }
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
-
-  export { selectAll, detail, tripAll, addDetailsInfo, uploadFile };
+  export { selectAll, detail, tripAll, addDetailsInfo, uploadFile, ghTripDetail, updDetailsInfo, delDetailsInfo  };

@@ -12,15 +12,41 @@
       <el-button>操作</el-button>
     </template>
   </el-popconfirm>
+  <Update ref="updateComponent" :ghid="id" name="餐厅" type="2"  ></Update>
 </template>
 
 <script setup lang="ts">
-import { InfoFilled } from '@element-plus/icons-vue'
+import { ref, toRefs, inject } from 'vue';
+import Update from "../timeopen/update.vue";
+import {useRoute} from "vue-router";
+import { delDetailsInfo } from '../../../api/travelGh';
+import {ElMessage} from "element-plus";
 
-const confirmEvent = () => {
-  console.log('confirm!')
-}
+const route = useRoute()
+const updateComponent = ref(null); // Reference to the update component
+
+
+//获取到要修改的id传给子组件
+const props = defineProps(['ghid']);
+const initList = inject('initList');
+const { ghid } = toRefs(props);
+const id = ghid.value
+//修改
 const cancelEvent = () => {
-  console.log('cancel!')
+  // Open the update component
+  console.log('================',id)
+  if (updateComponent.value) {
+    updateComponent.value.openDrawer();
+  }
 }
+//删除
+const confirmEvent = () => {
+  delDetailsInfo(id)
+  setTimeout(() => {
+    ElMessage.success('删除成功！！')
+    // 调用更新页面的方法
+    initList()
+  }, 1000)
+}
+
 </script>
