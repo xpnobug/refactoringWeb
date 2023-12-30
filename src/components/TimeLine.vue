@@ -58,12 +58,15 @@
                   <template v-slot="soltData">
                     <!--这里采用作用域插槽-可以自己自定义卡片样式-->
                     <component :is="getComponentType(soltData.card)" :card-data="soltData.card" />
-                    <div class="footer" style="margin: 10px 0px; top: 7px;">
+                    <div class="footer">
                       <div class="position" v-if="soltData.card.position != ''">
                         <el-icon>
                           <Position />
                         </el-icon>
                         {{ soltData.card.position }}
+                      </div>
+                      <div>
+                        <CaoZuo></CaoZuo>
                       </div>
                     </div>
                   </template>
@@ -105,9 +108,6 @@
             </div>
           </el-tabs>
         </div>
-        <!-- <el-row class="mb-4">
-            <el-button type="primary" plain>Primary</el-button>
-        </el-row> -->
       </div>
     </div>
   </div>
@@ -121,6 +121,7 @@ import card from '../components/timeline/card.vue';
 import WeatherForecast from '../components/weather/WeatherForecast.vue';
 import { ref, onMounted, provide } from 'vue'
 import { useRoute, useRouter } from "vue-router";
+import CaoZuo from "./timeline/caozuoComponent/CaoZuo.vue";
 // const props = defineProps(['reloadParent']);
 // defineExpose({ reloadParent });
 
@@ -563,5 +564,11 @@ const getComponentType = (cards) => {
     width: 20px;
     text-align: center;
   }
+}
+.footer{
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-direction: row-reverse;
 }
 </style>

@@ -93,7 +93,7 @@ const handleTransition = async (index) => {
 const scrollToImage = (index) => {
     console.log(index)
     const images = document.querySelectorAll('#carousel img');
-    console.log(images);
+    console.log(images[index]);
     images[index].scrollIntoView();
 };
 
@@ -123,7 +123,7 @@ onMounted(() => {
 
 
 <style scoped>
-@import url("http://8.140.45.252:9000/travel/open-props.min.css?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=mhAqhRJrIuFFfc8Glh3F%2F20231208%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231208T203543Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=3b42ba0017cf5d27bd560d5bf06d1eb70996d96643349d5a58bb1842f068684f") layer(design.system);
+@import url("https://npm.onmicrosoft.cn/hexo-tool-cc@1.1.5/source/kdg/css/open-props.min.css") layer(design.system);
 @import url("../../assets/css/gh/normalize.dark.min.css")layer(base.normalize);
 @import url("../../assets/css/card/remixicon.css");
 /* @import url("https://unpkg.com/open-props/normalize.dark.min.css"); */
