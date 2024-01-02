@@ -1,7 +1,8 @@
 <template>
    <div class="relative flex flex-col items-center bg-white dark:bg-black transition-bg">
      <RouterView></RouterView>
-      <div class="absolute inset-0 overflow-hidden">
+<!--     inset-0-->
+      <div class="absolute overflow-hidden">
          <div class="jumbo absolute -inset-[10px] opacity-50"></div>
       </div>
    </div>
