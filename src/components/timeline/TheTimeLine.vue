@@ -12,25 +12,29 @@
                 <div class="item-tail"></div>
             </li>
             <!--时间线内容-->
-            <template v-if="showCards">
-                <li v-for="(mouthItem, i) in timeData.mouthData" :key="'mm' + i" class="timeline-item">
-                    <!--  v-for="(date, j) in mouthItem.dateArr" :key="'date' + j" -->
-                    <div class="item-left" v-for="(date, j) in mouthItem.dateArr" :key="'date' + j">
-                        <div class="item-left-data">{{ date.startTime }}</div>
-                        <div class="item-left-total">
-                            <div class="item-left-total-text">
-                                共{{ mouthItem.dateArr.length }}条
-                            </div>
-                            <div class="item-left-total-end"></div>
-                        </div>
-                    </div>
-                    <div class="item-tail"></div>
-                    <div class="item-node"></div>
-                    <div class="item-content">
-                        <slot v-for="v in mouthItem.dateArr" :card="v"></slot>
-                    </div>
-                </li>
-            </template>
+          <template v-if="showCards">
+            <li v-for="(mouthItem, i) in timeData.mouthData" :key="'mm' + i" class="timeline-item">
+              <template v-for="(date, j) in mouthItem.dateArr" :key="'date' + j">
+                <!-- 左侧时间节点 -->
+                <div class="item-left">
+                  <div class="item-left-data">{{ date.startTime }}</div>
+                  <div class="item-left-total">
+                    <div class="item-left-total-text">共{{ mouthItem.dateArr.length }}条</div>
+                    <div class="item-left-total-end"></div>
+                  </div>
+                </div>
+
+                <!-- 右侧内容节点 -->
+                <!-- 时间线节点 -->
+                <div class="item-tail"></div>
+                <div class="item-node"></div>
+                <div class="item-content">
+                  <slot :card="date"></slot>
+                </div>
+              </template>
+
+            </li>
+          </template>
             <!--时间线尾部圆点-->
             <li class="timeline-item-foot">
                 <div class="item-node"></div>

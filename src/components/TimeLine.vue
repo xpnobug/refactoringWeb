@@ -53,21 +53,26 @@
             <!-- 时间轴：展示时间，车票信息位置，每个时间段可评论 -->
             <div class="jd-timeline">
               <el-empty :image-size="200" v-if="data.length === 0" description="暂无数据" />
-              <div v-for="(v, i) in data" class="year-item">
-                <the-time-line :time-data="v">
-                  <template v-slot="soltData">
-                    <!--这里采用作用域插槽-可以自己自定义卡片样式-->
-                    <component :is="getComponentType(soltData.card)" :card-data="soltData.card" />
+
+              <!-- 遍历数据展示年份项 -->
+              <div v-for="(yearData, index) in data" :key="index" class="year-item">
+                <!-- 时间线组件 -->
+                <the-time-line :time-data="yearData">
+                  <template v-slot="slotData">
+                    <!-- 使用动态组件展示不同类型的卡片 -->
+                    <component :is="getComponentType(slotData.card)" :card-data="slotData.card" />
+
+                    <!-- 脚注信息 -->
                     <div class="footer">
-                      <div class="position" v-if="soltData.card.position != ''">
+                      <!-- 位置信息 -->
+                      <div class="position" v-if="slotData.card.position !== ''">
                         <el-icon>
                           <Position />
                         </el-icon>
-                        {{ soltData.card.position }}
+                        {{ slotData.card.position }}
                       </div>
-                      <div>
-                        <CaoZuo :ghid="soltData.card.detailId" ></CaoZuo>
-                      </div>
+                      <!-- 操作组件，传递详情ID -->
+                      <CaoZuo :ghid="slotData.card.detailId" />
                     </div>
                   </template>
                 </the-time-line>
@@ -278,9 +283,11 @@ const formatDates = (dates) =>
     }));
 
 // 初始化列表数据
+
 const initList = async () => {
   // 调用异步函数获取数据
   const dataList = await tripAll(currentTab.value);
+  // console.log(dataList)
   // 将数据保存到响应式变量中
   data.value = dataList.map(mouthData => ({
     ...mouthData,
@@ -290,7 +297,6 @@ const initList = async () => {
     }))
   }));
 };
-
 initList();
 //规划详情数据
 const ghInfo = ref([]);
@@ -298,12 +304,12 @@ provide('initList', initList);
 
 const handleClick = (tab, event) => {
   currentTab.value = tab.props.name; // 更新 currentTab
-  initList();
+  initList(currentTab.value);
 }
 
 //1.交通 2.餐饮 3.酒店 4.景点 5.自定义
 const getComponentType = (cards) => {
-  console.log(cards)
+  // console.log(cards)
   // if (cards.creatType == '1') {
   //     return card;
   // } else if (cards.creatType == '2') {

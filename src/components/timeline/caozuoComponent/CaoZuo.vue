@@ -12,7 +12,7 @@
       <el-button>操作</el-button>
     </template>
   </el-popconfirm>
-  <Update ref="updateComponent" :ghid="id" name="餐厅" type="2"  ></Update>
+  <Update ref="updateComponent" :ghid="ghid" name="修改" type="2"  ></Update>
 </template>
 
 <script setup lang="ts">
@@ -30,18 +30,15 @@ const updateComponent = ref(null); // Reference to the update component
 const props = defineProps(['ghid']);
 const initList = inject('initList');
 const { ghid } = toRefs(props);
-const id = ghid.value
 //修改
 const cancelEvent = () => {
-  // Open the update component
-  console.log('================',id)
   if (updateComponent.value) {
     updateComponent.value.openDrawer();
   }
 }
 //删除
 const confirmEvent = () => {
-  delDetailsInfo(id)
+  delDetailsInfo(ghid.value)
   setTimeout(() => {
     ElMessage.success('删除成功！！')
     // 调用更新页面的方法

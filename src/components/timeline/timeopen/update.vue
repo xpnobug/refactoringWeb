@@ -108,7 +108,11 @@ const props = defineProps(['id', 'name', 'type', 'dayTab','ghid']);
 const { id, name, type, dayTab, ghid } = toRefs(props);
 const initList = inject('initList');
 
+// initList();
+// console.log('===',ghid.value);
 const openDrawer = async () => {
+  console.log('Received ghid:', props.ghid);
+
   // 打开抽屉或执行其他操作
   dialog.value = true;
   // 使用 await 等待 detail 函数完成
@@ -147,6 +151,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       loading.value = true
       setTimeout(() => {
         ElMessage.success('修改成功！！')
+        resetForm();
         // 调用更新页面的方法
         drawerRef.value?.close()
         loading.value = false
@@ -157,7 +162,22 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     }
   })
 }
-
+// 添加一个重置表单的函数
+const resetForm = () => {
+  ruleForm.dayId = '';
+  ruleForm.title = '';
+  ruleForm.money = 0;
+  ruleForm.traffic = '';
+  ruleForm.startCity = '';
+  ruleForm.endCity = '';
+  ruleForm.startTime = '';
+  ruleForm.endTime = '';
+  ruleForm.description = '';
+  ruleForm.position = '';
+  ruleForm.creatType = '';
+  ruleForm.imgList = [];
+  ruleForm.dayTab = '';
+}
 const cancelForm = (formEl: FormInstance | undefined) => {
   loading.value = false
   dialog.value = false

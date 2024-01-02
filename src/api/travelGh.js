@@ -85,4 +85,15 @@ const delDetailsInfo = async (infoId) => {
   }
 };
 
-  export { selectAll, detail, tripAll, addDetailsInfo, uploadFile, ghTripDetail, updDetailsInfo, delDetailsInfo  };
+const getOne = async (detailId,dayTab) => {
+  try {
+    const response = await instance.get('/ghTripDetails/getOne', {
+      params: { detailId,dayTab }
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+  export { selectAll, detail, tripAll, addDetailsInfo, uploadFile, ghTripDetail, updDetailsInfo, delDetailsInfo, getOne};
