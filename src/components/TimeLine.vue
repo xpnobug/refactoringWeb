@@ -72,7 +72,7 @@
                         {{ slotData.card.position }}
                       </div>
                       <!-- 操作组件，传递详情ID -->
-                      <CaoZuo :ghid="slotData.card.detailId" />
+                      <CaoZuo :ghid="slotData.card.detailId" :ghType="slotData.card.creatType" />
                     </div>
                   </template>
                 </the-time-line>
@@ -101,10 +101,11 @@
                   </template>
                   <el-row class="button-row">
                     <!-- 1.交通 2.餐饮 3.酒店 4.景点 5.自定义 -->
-                    <JingDian :id="route.params.id" name="餐厅" type="2" :day-tab="currentTab" />
-                    <el-button type="success" circle> 酒店 </el-button>
-                    <el-button type="info" circle> 交通 </el-button>
-                    <el-button type="warning" circle> 景点 </el-button>
+                    <Jiaotong :id="route.params.id" name="交通" type="1" :day-tab="currentTab" />
+                    <JingDian :id="route.params.id" name="图文" type="2" :day-tab="currentTab" />
+<!--                    <el-button type="success" circle> 酒店 </el-button>-->
+<!--                    <el-button type="info" circle> 交通 </el-button>-->
+<!--                    <el-button type="warning" circle> 景点 </el-button>-->
                     <el-button type="danger" circle> 自定义 </el-button>
                     <el-button type="danger" circle @click="toggleTheme()"> 切换 </el-button>
                   </el-row>
@@ -121,6 +122,7 @@
 import { detail, tripAll } from '../api/travelGh';
 import ImgCard from './timeline/ImgCard.vue';
 import JingDian from './timeline/timeopen/jingdian.vue';
+import Jiaotong from "./timeline/timeopen/jiaotong.vue";
 import TheTimeLine from '../components/timeline/TheTimeLine.vue';
 import card from '../components/timeline/card.vue';
 import WeatherForecast from '../components/weather/WeatherForecast.vue';

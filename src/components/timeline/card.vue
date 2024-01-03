@@ -6,7 +6,7 @@
 
         </div>
         <div class="card-desc">
-            <span>{{ cardData.description }}</span>
+            <span v-html=cardData.description> </span>
         </div>
     </div>
     <div class="item-content-card">

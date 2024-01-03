@@ -1,6 +1,7 @@
 // axios.js
 
 import axios from 'axios';
+import {ElMessage} from "element-plus";
 
 // 创建一个Axios实例
 const instance = axios.create({
@@ -32,7 +33,8 @@ instance.interceptors.response.use(
   },
   (error) => {
     // 对响应错误做些什么
-    return Promise.reject(error);
+    ElMessage.error(error)
+    // return Promise.reject(error);
   }
 );
 

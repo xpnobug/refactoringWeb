@@ -1,11 +1,10 @@
 <template>
-  <el-button type="primary" @click="openDrawer" circle> {{ name }}</el-button>
-  <el-drawer ref="drawerRef" :close-on-click-modal="false" v-model="dialog" :title="name" direction="ltr" class="demo-drawer" size="100%">
+  <el-drawer ref="drawerRef" v-model="dialog" :title="name" direction="ltr" class="demo-drawer" size="100%">
     <div class="demo-drawer__content">
       <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="auto" :label-position="labelPosition"
                :size="size" status-icon>
         <el-form-item label="" prop="title">
-          <el-input v-model="ruleForm.title" placeholder="请输入标题名称"/>
+          <el-input v-model="ruleForm.title" placeholder="请输入标题名称" />
         </el-form-item>
 
         <el-form-item label="" prop="startTime">
@@ -16,14 +15,14 @@
           <el-col class="text-center" :span="1" style="margin: 0 0.5rem">-</el-col> -->
           <el-col :span="11">
             <el-time-picker v-model="ruleForm.startTime" label="Pick a time" placeholder="请输入发生时间"
-                            style="width: 100%" value-format="HH:mm"/>
+                            style="width: 100%" value-format="HH:mm" />
           </el-col>
         </el-form-item>
         <el-form-item prop="description">
-          <QuillEditor @handleRichTextContentChange="onContentChange"/>
+          <QuillEditor @handleRichTextContentChange="onContentChange" />
           <!-- <el-input v-model="ruleForm.description" placeholder="请输入描述" type="textarea" :rows="4" /> -->
         </el-form-item>
-        <Upload v-model:modelValue="ruleForm.imgList"/>
+        <Upload v-model:modelValue="ruleForm.imgList" />
       </el-form>
       <div class="demo-drawer__footer">
         <el-button @click="cancelForm">取消</el-button>
@@ -34,11 +33,11 @@
 </template>
 
 <script lang="ts" setup>
-import {inject, reactive, ref, toRefs} from 'vue'
-import {ElDrawer, ElMessage, FormInstance, FormRules} from 'element-plus'
+import { ref, reactive, toRefs, inject } from 'vue'
+import { ElDrawer, ElMessageBox, ElMessage, FormInstance, FormRules } from 'element-plus'
 import Upload from './uploadFile.vue';
 import QuillEditor from '../../QuillEditor/index.vue';
-import {addDetailsInfo} from '../../../api/travelGh';
+import { updDetailsInfo, ghTripDetail } from '../../../api/travelGh';
 
 const size = ref('default')
 const dialog = ref(false)
@@ -53,6 +52,7 @@ function onContentChange(content) {
 
 
 interface RuleForm {
+  detailId:string;
   dayId: string;
   title: string;
   money: number; // 这里假设金额是一个数字，如果是字符串可以调整为 string
@@ -69,8 +69,10 @@ interface RuleForm {
 }
 
 
+
 const ruleFormRef = ref<FormInstance>()
 const ruleForm = reactive<RuleForm>({
+  detailId:'',
   dayId: '', // 请根据实际情况提供 dayId 的值
   title: '',
   money: 0, // 将 money 的类型调整为 number
@@ -88,8 +90,8 @@ const ruleForm = reactive<RuleForm>({
 
 const rules = reactive<FormRules<RuleForm>>({
   title: [
-    {required: true, message: '请输入标题', trigger: 'blur'},
-    {min: 1, max: 60, message: '至少写点东西吧', trigger: 'blur'},
+    { required: true, message: '请输入标题', trigger: 'blur' },
+    { min: 1, max: 60, message: '至少写点东西吧', trigger: 'blur' },
   ],
   startTime: [
     {
@@ -102,15 +104,38 @@ const rules = reactive<FormRules<RuleForm>>({
 
 const drawerRef = ref<InstanceType<typeof ElDrawer>>()
 
-const openDrawer = () => {
-  dialog.value = true
-}
-
-const props = defineProps(['id', 'name', 'type', 'dayTab']);
-const {id, name, type, dayTab} = toRefs(props);
+const props = defineProps(['id', 'name', 'type', 'dayTab','ghid','ghType']);
+const { id, name, type, dayTab, ghid, ghType } = toRefs(props);
 const initList = inject('initList');
 
-console.log('dayId', dayTab?.value)
+const openDrawer = async () => {
+  console.log('Received ghid:', props.ghid);
+  console.log('Received ghType:', props.ghType);
+
+  // 打开抽屉或执行其他操作
+  dialog.value = true;
+  // 使用 await 等待 detail 函数完成
+  //修改回显
+  const response = await ghTripDetail(ghid.value)
+  console.log(response);
+  // ruleForm.dayId = response.dayId;
+  // ruleForm.creatType = response.creatType;
+  // ruleForm.dayTab = response.dayTab;
+  ruleForm.detailId = response.detailId;
+  ruleForm.description = response.description;
+  ruleForm.endCity = response.endCity;
+  ruleForm.endTime = response.endTime;
+  ruleForm.imgList = response.imgList;
+  ruleForm.money = response.money;
+  ruleForm.position = response.position;
+  ruleForm.startCity = response.startCity;
+  ruleForm.startTime = response.startTime;
+  ruleForm.title = response.title;
+  ruleForm.traffic = response.traffic;
+}
+defineExpose({
+  openDrawer
+});
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
@@ -121,11 +146,10 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       ruleForm.creatType = type?.value;
       ruleForm.dayTab = dayTab?.value;
       // 模拟表单提交的异步操作
-      const dataList = addDetailsInfo(ruleForm);
+      updDetailsInfo(ruleForm);
       loading.value = true
       setTimeout(() => {
-        ElMessage.success('添加成功！！')
-        // 重置表单数据
+        ElMessage.success('修改成功！！')
         resetForm();
         // 调用更新页面的方法
         drawerRef.value?.close()
@@ -133,7 +157,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         initList();
       }, 2000)
     } else {
-      console.log('error submit!', fields)
+      console.log('error submit!',  fields)
     }
   })
 }
@@ -157,7 +181,6 @@ const cancelForm = (formEl: FormInstance | undefined) => {
   loading.value = false
   dialog.value = false
 }
-
 </script>
 
 <style>
@@ -177,4 +200,3 @@ const cancelForm = (formEl: FormInstance | undefined) => {
   margin: 10px;
 }
 </style>
-  

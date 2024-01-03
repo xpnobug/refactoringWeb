@@ -12,12 +12,15 @@
       <el-button>操作</el-button>
     </template>
   </el-popconfirm>
-  <Update ref="updateComponent" :ghid="ghid" name="修改" type="2"  ></Update>
+  <!-- 根据 ghType 的值动态渲染组件 -->
+  <JtUpdate v-if="ghType === '1'" ref="updateComponent" :ghid="ghid" :ghType="ghType" name="修改" type="1"></JtUpdate>
+  <JdUpdate v-if="ghType === '2'" ref="updateComponent" :ghid="ghid" :ghType="ghType" name="修改" type="2"></JdUpdate>
 </template>
 
 <script setup lang="ts">
 import { ref, toRefs, inject } from 'vue';
-import Update from "../timeopen/update.vue";
+import JdUpdate from "../timeopen/jd-update.vue";
+import JtUpdate from "../timeopen/jt-update.vue";
 import {useRoute} from "vue-router";
 import { delDetailsInfo } from '../../../api/travelGh';
 import {ElMessage} from "element-plus";
@@ -27,9 +30,10 @@ const updateComponent = ref(null); // Reference to the update component
 
 
 //获取到要修改的id传给子组件
-const props = defineProps(['ghid']);
+const props = defineProps(['ghid','ghType']);
 const initList = inject('initList');
 const { ghid } = toRefs(props);
+const { ghType } = toRefs(props);
 //修改
 const cancelEvent = () => {
   if (updateComponent.value) {

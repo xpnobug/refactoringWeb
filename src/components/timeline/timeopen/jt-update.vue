@@ -1,28 +1,71 @@
 <template>
-  <el-drawer ref="drawerRef" v-model="dialog" :title="name" direction="ltr" class="demo-drawer" size="100%">
+<!--  <el-button type="info" @click="openDrawer" circle> {{ name }}</el-button>-->
+  <el-drawer ref="drawerRef"  v-model="dialog" :title="name" direction="ltr" class="demo-drawer" size="100%">
     <div class="demo-drawer__content">
       <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="auto" :label-position="labelPosition"
                :size="size" status-icon>
-        <el-form-item label="" prop="title">
-          <el-input v-model="ruleForm.title" placeholder="请输入标题名称" />
+        <el-form-item required>
+          <el-col :span="11">
+            <el-form-item label="" prop="title">
+              <el-input v-model="ruleForm.title" placeholder="请输入标题名称"/>
+            </el-form-item>
+          </el-col>
+          <el-col class="text-center" :span="2"></el-col>
+          <el-col :span="11">
+            <el-form-item prop="traffic">
+              <el-select
+                  v-model="ruleForm.traffic"
+                  placeholder="请选择交通方式"
+                  clearable
+                  @change="handleSelectChange"
+              >
+                <el-option label="汽车/自驾" value="car"/>
+                <el-option label="公交/地铁" value="gj"/>
+                <el-option label="火车/高铁" value="hcgt"/>
+                <el-option label="飞机" value="fj"/>
+                <el-option label="单车/电瓶车" value="dc"/>
+                <el-option label="轮船" value="lc"/>
+                <el-option label="步行" value="citywork"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
         </el-form-item>
 
-        <el-form-item label="" prop="startTime">
-          <!-- <el-col :span="11">
-              <el-date-picker v-model="sizeForm.date1" type="date" label="Pick a date" placeholder="请输入发生时间"
-                  style="width: 100%" />
-          </el-col>
-          <el-col class="text-center" :span="1" style="margin: 0 0.5rem">-</el-col> -->
+        <el-form-item>
           <el-col :span="11">
-            <el-time-picker v-model="ruleForm.startTime" label="Pick a time" placeholder="请输入发生时间"
-                            style="width: 100%" value-format="HH:mm" />
+            <el-form-item v-if="showStartEnd" label="" prop="startPoint">
+              <el-input v-model="ruleForm.startCity" placeholder="请输入起始站点"/>
+            </el-form-item>
+          </el-col>
+          <el-col class="text-center" :span="2"></el-col>
+          <el-col :span="11">
+            <el-form-item v-if="showStartEnd" label="" prop="endPoint">
+              <el-input v-model="ruleForm.endCity" placeholder="请输入到达站点"/>
+            </el-form-item>
           </el-col>
         </el-form-item>
+        <el-form-item>
+          <el-col :span="11">
+            <el-form-item label="" prop="startTime">
+              <el-time-picker v-model="ruleForm.startTime" label="Pick a time" placeholder="请输入发生时间"
+                              style="width: 100%" value-format="HH:mm"/>
+            </el-form-item>
+          </el-col>
+          <el-col class="text-center" :span="2"></el-col>
+          <el-col :span="11">
+            <el-form-item v-if="showStartEnd" label="" prop="startPoint">
+              <el-time-picker v-model="ruleForm.endTime" label="Pick a time" placeholder="请输入到达时间"
+                              style="width: 100%" value-format="HH:mm"/>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+
+
         <el-form-item prop="description">
-          <QuillEditor @handleRichTextContentChange="onContentChange" />
+          <QuillEditor @handleRichTextContentChange="onContentChange"/>
           <!-- <el-input v-model="ruleForm.description" placeholder="请输入描述" type="textarea" :rows="4" /> -->
         </el-form-item>
-        <Upload v-model:modelValue="ruleForm.imgList" />
+        <Upload v-model:modelValue="ruleForm.imgList"/>
       </el-form>
       <div class="demo-drawer__footer">
         <el-button @click="cancelForm">取消</el-button>
@@ -33,11 +76,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, toRefs, inject } from 'vue'
-import { ElDrawer, ElMessageBox, ElMessage, FormInstance, FormRules } from 'element-plus'
+import {inject, reactive, ref, toRefs, computed } from 'vue'
+import {ElDrawer, ElMessage, FormInstance, FormRules} from 'element-plus'
 import Upload from './uploadFile.vue';
 import QuillEditor from '../../QuillEditor/index.vue';
-import { updDetailsInfo, ghTripDetail } from '../../../api/travelGh';
+import {updDetailsInfo, ghTripDetail} from '../../../api/travelGh';
 
 const size = ref('default')
 const dialog = ref(false)
@@ -69,10 +112,9 @@ interface RuleForm {
 }
 
 
-
 const ruleFormRef = ref<FormInstance>()
 const ruleForm = reactive<RuleForm>({
-  detailId:'',
+  detailId: '',
   dayId: '', // 请根据实际情况提供 dayId 的值
   title: '',
   money: 0, // 将 money 的类型调整为 number
@@ -90,8 +132,8 @@ const ruleForm = reactive<RuleForm>({
 
 const rules = reactive<FormRules<RuleForm>>({
   title: [
-    { required: true, message: '请输入标题', trigger: 'blur' },
-    { min: 1, max: 60, message: '至少写点东西吧', trigger: 'blur' },
+    {required: true, message: '请输入标题', trigger: 'blur'},
+    {min: 1, max: 60, message: '至少写点东西吧', trigger: 'blur'},
   ],
   startTime: [
     {
@@ -100,18 +142,23 @@ const rules = reactive<FormRules<RuleForm>>({
       trigger: 'change',
     },
   ],
+  traffic: [
+    {
+      required: true,
+      message: '请选择交通方式',
+      trigger: 'change',
+    }
+  ]
 })
 
 const drawerRef = ref<InstanceType<typeof ElDrawer>>()
 
-const props = defineProps(['id', 'name', 'type', 'dayTab','ghid']);
-const { id, name, type, dayTab, ghid } = toRefs(props);
+const props = defineProps(['id', 'name', 'type', 'dayTab','ghid','ghType']);
+const { id, name, type, dayTab, ghid, ghType } = toRefs(props);
 const initList = inject('initList');
-
-// initList();
-// console.log('===',ghid.value);
 const openDrawer = async () => {
   console.log('Received ghid:', props.ghid);
+  console.log('Received ghType:', props.ghType);
 
   // 打开抽屉或执行其他操作
   dialog.value = true;
@@ -134,10 +181,11 @@ const openDrawer = async () => {
   ruleForm.title = response.title;
   ruleForm.traffic = response.traffic;
 }
+
+
 defineExpose({
   openDrawer
 });
-
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate((valid, fields) => {
@@ -182,6 +230,20 @@ const cancelForm = (formEl: FormInstance | undefined) => {
   loading.value = false
   dialog.value = false
 }
+
+const handleSelectChange = (val) => {
+  // 更新你的数据模型
+  ruleForm.traffic = val;
+  // 阻止抽屉关闭
+  dialog.value = true
+};
+// 计算属性来判断是否显示起始站点和到达站点的输入框
+const showStartEnd = computed(() => {
+  return ruleForm.traffic !== 'dc' &&
+      ruleForm.traffic !== 'citywork' &&
+      ruleForm.traffic !== '';
+});
+
 </script>
 
 <style>
